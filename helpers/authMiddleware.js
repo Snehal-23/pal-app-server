@@ -1,5 +1,4 @@
 const expressJwt = require("express-jwt");
-const { done } = require("express-jwt");
 
 function authJwt() {
   return expressJwt
@@ -15,14 +14,13 @@ function authJwt() {
         { url: /\/api\/v1\/products(.*)/, methods: ["GET", "OPTIONS"] },
         { url: /\/api\/v1\/categories(.*)/, methods: ["GET", "OPTIONS"] },
         "/api/v1/users/login",
-        "/api/v1/products",
         "/api/v1/users/register",
       ],
     });
 }
 
 function getTokenFromHeader(req) {
-  // console.log(req.headers);
+  // console.log(req.body.headers.authorization);
   if (
     req.headers.authorization &&
     req.headers.authorization.split(" ")[0] === "Bearer"
@@ -32,11 +30,17 @@ function getTokenFromHeader(req) {
   return null;
 }
 
-async function isRevoked(req, payload, done) {
-  if (!payload.payload.isAdmin) {
-    return done(null, true);
+async function isRevoked(req, token) {
+  if (!token.payload.isAdmin) {
+    return true;
   }
-  // done(null, false);
 }
+
+// async function isRevoked(req, payload, done) {
+//   if (!payload.payload.isAdmin) {
+//     return done(null, true);
+//   }
+//   return done(null, false);
+// }
 
 module.exports = authJwt;

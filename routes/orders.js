@@ -2,25 +2,31 @@ const express = require("express");
 
 const router = express.Router();
 
+const auth = require("../helpers/jwt");
+
 const orderController = require("../controllers/order");
 
 //GET orders
-router.get("/:id", orderController.getOrder);
+router.get("/:id", auth.required, orderController.getOrder);
 
-router.post("/update/OrderStatus", orderController.updateOrderStatus);
+router.post(
+  "/update/OrderStatus",
+  auth.required,
+  orderController.updateOrderStatus
+);
 
-router.post("/totalSale", orderController.getTotalSales);
+router.post("/totalSale", auth.required, orderController.getTotalSales);
 
-router.post("/count", orderController.orderCount);
+router.post("/count", auth.required, orderController.orderCount);
 
-router.post("/userOrders", orderController.getUserOrders);
+router.post("/userOrders", auth.required, orderController.getUserOrders);
 
-router.post("/delete/:id", orderController.deleteOrder);
+router.post("/delete/:id", auth.required, orderController.deleteOrder);
 
-router.post("/sales", orderController.deleteOrder);
+router.post("/sales", auth.required, orderController.deleteOrder);
 
-router.get("/", orderController.getOrders);
+router.get("/", auth.required, orderController.getOrders);
 
-router.post("/", orderController.postOrder);
+router.post("/", auth.required, orderController.postOrder);
 
 module.exports = router;

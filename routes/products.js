@@ -2,6 +2,8 @@ const express = require("express");
 
 const router = express.Router();
 
+const auth = require("../helpers/jwt");
+
 const productController = require("../controllers/product");
 
 const multer = require("multer");
@@ -32,31 +34,37 @@ const storage = multer.diskStorage({
 const uploadOptions = multer({ storage: storage });
 
 //GET products
-router.get("/", productController.getProducts);
+router.get("/", auth.optional, productController.getProducts);
 
 //products on sale - limit
-router.get("/sale/:limit", productController.getProductOnSale);
+router.get("/sale/:limit", auth.optional, productController.getProductOnSale);
 
 //count product
-router.post("/count", productController.countProduct);
+router.post("/count", auth.required, productController.countProduct);
 
 //fetch single product
-router.get("/:id", productController.getProduct);
+router.get("/:id", auth.optional, productController.getProduct);
 
 //post products
-router.post("/", uploadOptions.single("image"), productController.postProduct);
+router.post(
+  "/",
+  auth.required,
+  uploadOptions.single("image"),
+  productController.postProduct
+);
 
 //post products
 router.post(
   "/upload/imageGallery",
+  auth.required,
   uploadOptions.array("images", 10),
   productController.uploadImageGallery
 );
 
 //update product
-router.post("/update/:id", productController.updateProduct);
+router.post("/update/:id", auth.required, productController.updateProduct);
 
 //delete product
-router.post("/delete/:id", productController.deleteProduct);
+router.post("/delete/:id", auth.required, productController.deleteProduct);
 
 module.exports = router;

@@ -5,18 +5,18 @@ const cors = require("cors");
 
 const app = express();
 const authJwt = require("./helpers/authMiddleware");
+// const auth = require("./helpers/jwt");
 const errorHandler = require("./helpers/error-handler");
 
 require("dotenv/config");
 
 app.use(cors());
-// app.options("*", cors());
+app.options("*", cors());
 
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(authJwt());
-// app.use(errorHandler);
+// app.use(authJwt());
 app.use("/public/uploads", express.static(__dirname + "/public/uploads"));
 
 //env variable
@@ -35,6 +35,8 @@ app.use(`${api}/orders`, orderRoutes);
 app.use(`${api}/users`, userRoutes);
 app.use(`${api}/categories`, categoryRoutes);
 
+// app.use(errorHandler);
+
 app.get(`/`, (req, res) => {
   res.send("Welcome to application.");
 });
@@ -51,7 +53,7 @@ app.get(`/`, (req, res) => {
 //     console.log(err);
 //   });
 
-//prduction
+// prduction
 var server = app.listen(process.env.PORT || 3000, function () {
   console.log(
     "Express server listening on port %d in %s mode",
