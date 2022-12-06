@@ -10,7 +10,7 @@ exports.getOrders = async (req, res) => {
     .populate("user", "user name")
     .sort({ dateOrdered: -1 }); //to sort by desc add -1
   if (!orderList) {
-    res.json({ status: 0, message: "No data found" });
+    res.status(404).json({ status: 0, message: "No data found" });
   } else {
     res.json({ message: "success", status: 1, data: orderList });
   }
@@ -41,7 +41,7 @@ exports.getOrder = (req, res) => {
 };
 
 exports.postOrder = async (req, res) => {
-  // console.log(req.body.orderItems);
+  console.log(req.body);
   const orderItemsIds = Promise.all(
     req.body.orderItems.map(async (orderItem) => {
       let newOrderItem = new OrderItem({
@@ -72,7 +72,7 @@ exports.postOrder = async (req, res) => {
     shippingAddress1: req.body.shippingAddress1,
     shippingAddress2: req.body.shippingAddress2,
     city: req.body.city,
-    zip: req.body.zip,
+    pincode: req.body.pincode,
     state: req.body.state,
     country: req.body.country,
     phone: req.body.phone,
@@ -91,14 +91,17 @@ exports.postOrder = async (req, res) => {
 };
 
 exports.updateOrderStatus = async (req, res) => {
-  let order_id = req.body.order_id;
+  let order_id = req.body.order.order_id;
+  let order_status = req.body.order.status;
+  let date = new Date();
   if (!mongoose.isValidObjectId(order_id)) {
     return res.status(400).send({ message: "Invalid Product Id", status: 0 });
   }
   Order.findByIdAndUpdate(
     order_id,
     {
-      status: req.body.status,
+      status: order_status,
+      modifiedDate: date,
     },
     {
       new: true, //to get updated object
@@ -168,7 +171,7 @@ exports.orderCount = async (req, res) => {
 };
 
 exports.getUserOrders = async (req, res) => {
-  const user_id = req.body.user_id;
+  const user_id = req.params.id;
   if (!mongoose.isValidObjectId(user_id)) {
     return res.status(400).send({ message: "Invalid user id", status: 0 });
   }

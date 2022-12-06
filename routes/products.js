@@ -36,6 +36,13 @@ const uploadOptions = multer({ storage: storage });
 //GET products
 router.get("/", auth.optional, productController.getProducts);
 
+//category specific products
+router.get(
+  "/catgeory/:catId",
+  auth.optional,
+  productController.getCategoryProducts
+);
+
 //products on sale - limit
 router.get("/sale/:limit", auth.optional, productController.getProductOnSale);
 

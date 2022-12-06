@@ -1,7 +1,6 @@
 var jwt = require("express-jwt");
 
 function getTokenFromHeader(req) {
-  // console.log(req.headers);
   if (typeof req.body === "object" && Object.keys(req.body).length === 0) {
     if (
       req.headers.authorization &&
@@ -15,11 +14,10 @@ function getTokenFromHeader(req) {
   ) {
     return req.body.headers.authorization.split(" ")[1];
   }
-
-  // return null;
-  return res
-    .status(401)
-    .json({ message: "User is not authorized. Please check auth_token" });
+  return "User is not authorized. Please check auth_token";
+  // return res
+  //   .status(401)
+  //   .json({ message: "User is not authorized. Please check auth_token" });
 }
 
 var auth = {

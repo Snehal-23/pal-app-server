@@ -7,11 +7,14 @@ const Category = require("../models/category");
 
 exports.getProducts = async (req, res) => {
   let filter = {};
-  //ways to filter acc to category : http://localhost:3000/api/v1/products/categories=
-  if (req.query.categories) {
-    filter = { category: req.query.categories.split(",") };
-  }
-  const productList = await Product.find(filter);
+  // const cat_id = req.query.categories;
+  // const cat_id = req.body.category ? req.body.category : null;
+  // //ways to filter acc to category : http://localhost:3000/api/v1/products/categories=
+  // if (cat_id) {
+  //   filter = { category: cat_id };
+  // }
+
+  const productList = await Product.find(filter).populate("category");
   if (!productList) {
     res.json({ status: 0, message: "No data found" });
   } else {
@@ -182,4 +185,19 @@ exports.uploadImageGallery = async (req, res) => {
 
   if (!product) return res.status(500).send("the gallery cannot be updated!");
   res.send(product);
+};
+
+exports.getCategoryProducts = async (req, res) => {
+  let filter = {};
+  let cat_id = req.params.catId;
+  //ways to filter acc to category : http://localhost:3000/api/v1/products/categories=
+  if (cat_id) {
+    filter = { category: cat_id };
+  }
+  const productList = await Product.find(filter).populate("category");
+  if (!productList) {
+    res.json({ status: 0, message: "No data found" });
+  } else {
+    res.json({ data: productList, status: 1, message: "success" });
+  }
 };

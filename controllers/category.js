@@ -32,11 +32,12 @@ exports.getCategory = (req, res) => {
     });
 };
 exports.postCategory = async (req, res) => {
-  let category = new Category({
-    name: req.body.name,
-    icon: req.body.icon,
-    color: req.body.color,
-  });
+  // let category = new Category({
+  //   name: req.body.name,
+  //   icon: req.body.icon,
+  //   color: req.body.color,
+  // });
+  let category = new Category(req.body.category);
   const createdCat = await category.save();
   if (!createdCat) {
     return res.status(500).json({

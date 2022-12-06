@@ -42,6 +42,7 @@ const orderSchema = new Schema(
     status: {
       type: String,
       required: true,
+      default: "Pending",
     },
     totalPrice: {
       type: Number,
@@ -56,6 +57,12 @@ const orderSchema = new Schema(
       type: Date,
       required: true,
       default: mongoose.now,
+    },
+    shippedDate: {
+      type: Date,
+    },
+    deliveryDate: {
+      type: Date,
     },
   },
   {
